@@ -9,6 +9,11 @@ const db = mysql.createConnection({
   password: "Lamadev123",
   database: "test",
 });
+// if there is a auth issue
+
+// ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Lamadev123'
+
+app.use(express.json()); // it allows us to send any json file using a client
 
 app.get("/", (req, res) => {
   res.json("Hello This is the backendd");
@@ -22,6 +27,20 @@ app.get("/books", (req, res) => {
     } else {
       return res.json(data);
     }
+  });
+});
+
+app.post("/books", (req, res) => {
+  const q = "INSERT INTO books (`title`,`desc`,`cover`) VALUES (?) ";
+  // const values = [
+  //   "title from backend",
+  //   "desc from backend",
+  //   "cover pic from backend",
+  // ];
+  const values = [req.body.title, req.body.desc, req.body.cover];
+  db.query(q, [values], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Book has been created succesfull... ");
   });
 });
 
